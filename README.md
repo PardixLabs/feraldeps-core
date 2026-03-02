@@ -57,9 +57,10 @@ minimize network traffic.
 
 ### Disabling external lookups
 
-To use the tool offline or avoid external API calls, you may manually edit the
-source to disable network requests, or contact the maintainers for guidance on
-running with cached data only.
+There is no built‑in offline mode at present. You can modify the source to
+short‑circuit network calls (e.g. return empty results) if you need to run in
+an air‑gapped environment; let us know if you'd like help implementing this
+feature.
 
 ## Ignored files
 See `.gitignore` for details; build artifacts live under `target/` and are
