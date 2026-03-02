@@ -1,30 +1,42 @@
 # feraldeps-core
 
-Open Source, local dependency and vulnerability scanner.
+Open‑source, local dependency and vulnerability scanner for Java projects.  The
+primary deliverable is a desktop GUI (`.jar` + macOS `.dmg` bundle); most of the
+work (parsing your project files and generating reports) runs locally.  However,
+to check for newer versions, vulnerabilities and CVSS severity scores the tool
+does make outbound HTTP requests to public APIs such as Maven Central, the OSV
+(vulnerability) service and various CVSS providers (OSS Index, NVD, GitHub,
+etc.).
 
 ## Features
-- Local scanning only
-- Outdated and vulnerability checks
-- HTML report export
-- Manual update check
 
-## Getting started
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/PardixLabs/feraldeps-core.git
-   cd feraldeps-core
-   ```
-2. Build with Maven:
-   ```bash
-   mvn clean package
-   ```
-3. Run the GUI:
-   ```bash
-   java -jar feralDeps-Java/target/feraldeps-*.jar
-   ```
+- Scans local Gradle/Maven projects for declared dependencies
+- Detects outdated versions and known vulnerabilities
+- Generates an HTML/CSV report
+- Simple GUI with manual update checks
+
+## Building and running
+
+```bash
+# ensure you are in the repository root
+cd /path/to/feraldeps-core/feraldeps-core
+
+# compile and package
+mvn clean package
+
+# after a successful build the runnable jar is located at:
+# target/feraldeps-<version>.jar
+java -jar target/feraldeps-*.jar
+```
+
+## Ignored files
+See `.gitignore` for details; build artifacts live under `target/` and are
+excluded from version control.
 
 ## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md)
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting
+issues or pull requests.
 
 ## Code of Conduct
-See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+All contributors are expected to abide by the
+[Code of Conduct](CODE_OF_CONDUCT.md).
