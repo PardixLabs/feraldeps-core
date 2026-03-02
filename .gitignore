@@ -1,0 +1,20 @@
+# Maven / Java
+/feralDeps-Java/target/
+*.class
+*.jar
+
+# Application bundles
+*.dmg
+*.icns
+
+# IDEs / editors
+*.iml
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# temporary files
+*.log
+*~
