@@ -35,6 +35,20 @@ mvn clean package
 java -jar target/feraldeps-*.jar
 ```
 
+## Configuration
+
+The GUI includes a **Settings** tab where you can configure optional API credentials
+for enhanced CVSS severity scoring:
+
+- **OSS Index credentials** – required for access to Sonatype's OSS Index CVSS service.
+  Provide your username and token.
+- **GitHub token** – optional, used to query GitHub's vulnerability database for CVSS
+  scores. Provide a personal access token with appropriate permissions.
+
+These credentials are stored locally and are **never transmitted** except when making
+authenticated requests to the respective services. Without these credentials, the tool
+will fall back to public APIs (NVD, etc.) for CVSS data.
+
 ## Privacy Policy
 
 This application scans your local project files to check for dependency updates
