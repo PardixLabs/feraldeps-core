@@ -51,6 +51,7 @@ public class GuiMain extends JFrame {
     private JPanel noInfoPanel;
     private JPanel ignoredPanel;
     private JPanel helpPanel;
+    private JTabbedPane tabbedPane;
     private JButton selectButton;
     private JButton rescanButton;
     private JButton exportButton;
@@ -86,6 +87,13 @@ public class GuiMain extends JFrame {
         setSize(900, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        // Set Metal look and feel for better cross-platform tab styling support
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (Exception e) {
+            // Fall back to default if Metal is not available
+        }
 
         cacheDefaultUiValues();
         configureTypography();
@@ -139,7 +147,7 @@ public class GuiMain extends JFrame {
         darkModeButton.addActionListener(e -> toggleDarkMode());
         leftPanel.add(darkModeButton);
 
-        settingsButton = new JButton("Settings");
+        settingsButton = new JButton("API Credentials");
         markButton(settingsButton, "secondary");
         settingsButton.addActionListener(e -> openSettingsDialog());
         leftPanel.add(settingsButton);
@@ -153,7 +161,7 @@ public class GuiMain extends JFrame {
         topPanel.add(statusLabel, BorderLayout.EAST);
 
         // Create tabbed pane
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
         tabbedPane.setBorder(new EmptyBorder(4, 8, 8, 8));
 
         // All Dependencies tab
@@ -950,7 +958,14 @@ public class GuiMain extends JFrame {
         UIManager.put("CheckBox.foreground", fg);
         UIManager.put("TabbedPane.background", bg);
         UIManager.put("TabbedPane.foreground", fg);
-        UIManager.put("TabbedPane.selected", dark ? DARK_HEADER : defaultUiValues.get("TabbedPane.selected"));
+        UIManager.put("TabbedPane.selected", dark ? new Color(70, 130, 240) : defaultUiValues.get("TabbedPane.selected"));
+        UIManager.put("TabbedPane.selectedForeground", dark ? Color.WHITE : (Color) defaultUiValues.get("TabbedPane.foreground"));
+        UIManager.put("TabbedPane.selectedBackground", dark ? new Color(70, 130, 240) : defaultUiValues.get("TabbedPane.selected"));
+        UIManager.put("TabbedPane.contentAreaColor", dark ? new Color(70, 130, 240) : (Color) defaultUiValues.get("TabbedPane.contentAreaColor"));
+        UIManager.put("TabbedPane.contentBorderInsets", new java.awt.Insets(0, 0, 0, 0));
+        UIManager.put("TabbedPane.tabAreaBackground", bg);
+        UIManager.put("TabbedPane.highlight", dark ? new Color(90, 150, 255) : (Color) defaultUiValues.get("control"));
+        UIManager.put("TabbedPane.shadow", dark ? new Color(30, 30, 40) : UIManager.getColor("TabbedPane.shadow"));
         UIManager.put("control", control);
         UIManager.put("TextArea.background", bg);
         UIManager.put("TextArea.foreground", fg);
@@ -962,6 +977,12 @@ public class GuiMain extends JFrame {
 
         SwingUtilities.updateComponentTreeUI(this);
         applyComponentTheme(this, bg, fg, dark);
+        // Explicitly set tab colors after component theme
+        if (tabbedPane != null) {
+            for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+                tabbedPane.setForegroundAt(i, dark ? Color.WHITE : fg);
+            }
+        }
         refreshHtmlLabelColors(this, dark);
         revalidate();
         repaint();
@@ -1029,8 +1050,13 @@ public class GuiMain extends JFrame {
         }
 
         if (component instanceof JTabbedPane) {
-            component.setBackground(bg);
-            component.setForeground(fg);
+            JTabbedPane pane = (JTabbedPane) component;
+            pane.setBackground(bg);
+            pane.setForeground(fg);
+            // Make sure all tabs use appropriate text colors
+            for (int i = 0; i < pane.getTabCount(); i++) {
+                pane.setForegroundAt(i, dark ? Color.WHITE : fg);
+            }
         }
 
         if (component instanceof Container) {
@@ -1051,6 +1077,8 @@ public class GuiMain extends JFrame {
         defaultUiValues.put("Button.shadow", UIManager.getColor("Button.shadow"));
         defaultUiValues.put("Button.select", UIManager.getColor("Button.select"));
         defaultUiValues.put("TabbedPane.selected", UIManager.getColor("TabbedPane.selected"));
+        defaultUiValues.put("TabbedPane.foreground", UIManager.getColor("TabbedPane.foreground"));
+        defaultUiValues.put("TabbedPane.contentAreaColor", UIManager.getColor("TabbedPane.contentAreaColor"));
     }
 
     private void configureTypography() {
@@ -1077,34 +1105,56 @@ public class GuiMain extends JFrame {
     }
 
     private void styleButton(JButton button, boolean dark) {
-        if (!dark) {
-            button.setBackground((Color) defaultUiValues.get("Button.background"));
-            button.setForeground((Color) defaultUiValues.get("Button.foreground"));
-            button.setBorder((Border) defaultUiValues.get("Button.border"));
-            return;
-        }
-
         Object role = button.getClientProperty("role");
-        Color fill = DARK_BUTTON;
-        Color border = DARK_BORDER;
-        Color text = DARK_TEXT;
+        Color fill;
+        Color border;
+        Color text;
 
-        if ("primary".equals(role)) {
-            fill = DARK_ACCENT;
-            border = DARK_ACCENT.darker();
-            text = Color.WHITE;
-        } else if ("success".equals(role)) {
-            fill = DARK_SUCCESS;
-            border = DARK_SUCCESS.darker();
-            text = Color.WHITE;
-        } else if ("warning".equals(role)) {
-            fill = DARK_WARNING;
-            border = DARK_WARNING.darker();
-            text = Color.WHITE;
-        } else if ("danger".equals(role)) {
-            fill = DARK_DANGER;
-            border = DARK_DANGER.darker();
-            text = Color.WHITE;
+        if (dark) {
+            fill = DARK_BUTTON;
+            border = DARK_BORDER;
+            text = DARK_TEXT;
+
+            if ("primary".equals(role)) {
+                fill = DARK_ACCENT;
+                border = DARK_ACCENT.darker();
+                text = Color.WHITE;
+            } else if ("success".equals(role)) {
+                fill = DARK_SUCCESS;
+                border = DARK_SUCCESS.darker();
+                text = Color.WHITE;
+            } else if ("warning".equals(role)) {
+                fill = DARK_WARNING;
+                border = DARK_WARNING.darker();
+                text = Color.WHITE;
+            } else if ("danger".equals(role)) {
+                fill = DARK_DANGER;
+                border = DARK_DANGER.darker();
+                text = Color.WHITE;
+            }
+        } else {
+            // Light mode - same styling as dark mode, just different colors
+            fill = new Color(240, 240, 240);
+            border = new Color(180, 180, 180);
+            text = new Color(30, 30, 30);
+
+            if ("primary".equals(role)) {
+                fill = new Color(59, 131, 246);
+                border = new Color(37, 99, 214);
+                text = Color.WHITE;
+            } else if ("success".equals(role)) {
+                fill = new Color(34, 197, 94);
+                border = new Color(22, 163, 74);
+                text = Color.WHITE;
+            } else if ("warning".equals(role)) {
+                fill = new Color(217, 119, 6);
+                border = new Color(180, 83, 9);
+                text = Color.WHITE;
+            } else if ("danger".equals(role)) {
+                fill = new Color(239, 68, 68);
+                border = new Color(220, 38, 38);
+                text = Color.WHITE;
+            }
         }
 
         button.setBackground(fill);
@@ -1336,25 +1386,25 @@ public class GuiMain extends JFrame {
             String text = label.getText();
             if (text != null && text.toLowerCase().contains("<html")) {
                 if (dark) {
-                    text = text.replace("#666", "#98A0AA")
-                               .replace("#888", "#AAB2BD")
-                               .replace("#9A6700", "#C99A4A")
-                               .replace("#00AA00", "#6FD38D")
-                               .replace("#0066CC", "#7FAEFF")
-                               .replace("#FF6600", "#FFB86B")
-                               .replace("#FF0000", "#FF8A8A")
-                               .replace("#CC0000", "#FF6B6B")
-                               .replace("#B00000", "#FF7B7B");
+                    text = text.replace("#666", "#B0B8C4")
+                               .replace("#888", "#C4CCDA")
+                               .replace("#9A6700", "#E8B966")
+                               .replace("#00AA00", "#4ADA76")
+                               .replace("#0066CC", "#5B9FFF")
+                               .replace("#FF6600", "#FFA540")
+                               .replace("#FF0000", "#FF5555")
+                               .replace("#CC0000", "#FF4444")
+                               .replace("#B00000", "#FF3333");
                 } else {
-                    text = text.replace("#98A0AA", "#666")
-                               .replace("#AAB2BD", "#888")
-                               .replace("#C99A4A", "#9A6700")
-                               .replace("#6FD38D", "#00AA00")
-                               .replace("#7FAEFF", "#0066CC")
-                               .replace("#FFB86B", "#FF6600")
-                               .replace("#FF8A8A", "#FF0000")
-                               .replace("#FF6B6B", "#CC0000")
-                               .replace("#FF7B7B", "#B00000");
+                    text = text.replace("#B0B8C4", "#666")
+                               .replace("#C4CCDA", "#888")
+                               .replace("#E8B966", "#9A6700")
+                               .replace("#4ADA76", "#00AA00")
+                               .replace("#5B9FFF", "#0066CC")
+                               .replace("#FFA540", "#FF6600")
+                               .replace("#FF5555", "#FF0000")
+                               .replace("#FF4444", "#CC0000")
+                               .replace("#FF3333", "#B00000");
                 }
                 label.setText(text);
             }

@@ -1,4 +1,5 @@
 com/pardixlabs/feraldeps/GuiMain$DependencyCheckbox.class
+com/pardixlabs/feraldeps/UpdateManager$ReleaseAsset.class
 com/pardixlabs/feraldeps/VulnerabilityDatabase.class
 com/pardixlabs/feraldeps/GuiMain.class
 com/pardixlabs/feraldeps/VulnerabilityDatabase$CvssResult.class
@@ -11,6 +12,7 @@ com/pardixlabs/feraldeps/ScanResult.class
 com/pardixlabs/feraldeps/VulnerabilityDatabase$RemediationInfo.class
 com/pardixlabs/feraldeps/UpdateManager.class
 com/pardixlabs/feraldeps/GuiMain$RoundedBorder.class
+com/pardixlabs/feraldeps/UpdateManager$OsType.class
 com/pardixlabs/feraldeps/Dependency.class
 com/pardixlabs/feraldeps/Main.class
 com/pardixlabs/feraldeps/SplashScreen.class
