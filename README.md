@@ -1,12 +1,13 @@
 # feraldeps-core
 
-Open‑source, local dependency and vulnerability scanner for Java projects.  The
-primary deliverable is a desktop GUI; most of the
-work (parsing your project files and generating reports) runs locally.  However,
-to check for newer versions, vulnerabilities and CVSS severity scores the tool
-does make outbound HTTP requests to public APIs such as Maven Central, the OSV
-(vulnerability) service and various CVSS providers (OSS Index, NVD, GitHub,
-etc.).
+Open‑source, local dependency and vulnerability scanner for Java projects.
+Maintained by [@Conor-20105865](https://github.com/Conor-20105865).
+
+The primary deliverable is a desktop GUI; most of the work (parsing your project
+files and generating reports) runs locally. However, to check for newer versions,
+vulnerabilities and CVSS severity scores the tool does make outbound HTTP
+requests to public APIs such as Maven Central, the OSV (vulnerability) service and
+various CVSS providers (OSS Index, NVD, GitHub, etc.).
 
 ## Download
 
@@ -130,7 +131,7 @@ Below are a few screenshots showing the main UI and generated report output.
 Future releases of feraldeps-core may be code-signed. The team structure is as follows:
 
 - **Committers and reviewers:** [PardixLabs team](https://github.com/orgs/PardixLabs)
-- **Release approvers:** [@cnr](https://github.com/cnr) and core maintainers
+- **Release approvers:** [@Conor-20105865](https://github.com/cnr) and core maintainers
 
 Each release must be reviewed and manually approved before signing. Signed
 releases include a valid signature confirming that the binary is built from
