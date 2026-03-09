@@ -63,7 +63,7 @@ java -jar target/feraldeps-*.jar
    java -jar target/feraldeps-*.jar
    ```
 2. In the GUI, select a Gradle/Maven project folder and click **Scan**.
-3. Review the generated report; export HTML/CSV if desired.
+3. Review the generated report; export HTML if desired.
 
 ## Configuration
 
