@@ -4,8 +4,8 @@ com/pardixlabs/feraldeps/VulnerabilityDatabase.class
 com/pardixlabs/feraldeps/GuiMain.class
 com/pardixlabs/feraldeps/VulnerabilityDatabase$CvssResult.class
 com/pardixlabs/feraldeps/GuiMain$IgnoredDependencyCheckbox.class
-com/pardixlabs/feraldeps/UpdateManager$ReleaseInfo.class
 com/pardixlabs/feraldeps/PomParser.class
+com/pardixlabs/feraldeps/UpdateManager$ReleaseInfo.class
 com/pardixlabs/feraldeps/IgnoredDependencies.class
 com/pardixlabs/feraldeps/HtmlReportGenerator.class
 com/pardixlabs/feraldeps/ScanResult.class

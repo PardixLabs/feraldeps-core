@@ -8,6 +8,21 @@ does make outbound HTTP requests to public APIs such as Maven Central, the OSV
 (vulnerability) service and various CVSS providers (OSS Index, NVD, GitHub,
 etc.).
 
+## Download
+
+Download the latest prebuilt jar (no build required):
+
+- [feraldeps-0.1.1.jar](https://github.com/PardixLabs/feraldeps-core/releases/download/v0.1.1/feraldeps-0.1.1.jar)
+
+Run by either double-clicking the jar (on supported OSes) or via command line:
+
+```bash
+java -jar /path/to/feraldeps-0.1.1.jar
+```
+
+If you have a different version, update the filename accordingly (e.g., `feraldeps-0.1.2.jar`).
+
+
 ## Features
 
 - Scans local Gradle/Maven projects for declared dependencies
@@ -21,11 +36,16 @@ etc.).
 * Support additional ecosystems such as Python and JavaScript (planned)
 * Improve offline/cached operation and CI integration
 
+## Prerequisites
+
+- Java (JDK) 11 or newer
+- Maven 3.6+ (to build from source)
+
 ## Building and running
 
 ```bash
 # ensure you are in the repository root
-cd /path/to/feraldeps-core/feraldeps-core
+cd /path/to/feraldeps-core
 
 # compile and package
 mvn clean package
@@ -34,6 +54,15 @@ mvn clean package
 # target/feraldeps-<version>.jar
 java -jar target/feraldeps-*.jar
 ```
+
+## Quick start
+
+1. Run the application:
+   ```bash
+   java -jar target/feraldeps-*.jar
+   ```
+2. In the GUI, select a Gradle/Maven project folder and click **Scan**.
+3. Review the generated report; export HTML/CSV if desired.
 
 ## Configuration
 
@@ -80,9 +109,25 @@ feature.
 See `.gitignore` for details; build artifacts live under `target/` and are
 excluded from version control.
 
+## Screenshots
+
+Below are a few screenshots showing the main UI and generated report output.
+
+![Main UI](docs/screenshots/GUI_01.png)
+*Main application window.*
+
+![Report (Summary)](docs/screenshots/Report_Main_01.png)
+*Generated report summary view.*
+
+![Report (CVSS Chart)](docs/screenshots/Report_Chart_CVSS_01.png)
+*Vulnerability severity score visualization.*
+
+![Initial launch / Terms](docs/screenshots/Terms_Of_Use.png)
+*First launch / terms of use dialog.*
+
 ## Code Signing Policy
 
-Releases of feraldeps-core may be code-signed. The team structure is as follows:
+Future releases of feraldeps-core may be code-signed. The team structure is as follows:
 
 - **Committers and reviewers:** [PardixLabs team](https://github.com/orgs/PardixLabs)
 - **Release approvers:** [@cnr](https://github.com/cnr) and core maintainers
