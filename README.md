@@ -131,7 +131,7 @@ Below are a few screenshots showing the main UI and generated report output.
 Future releases of feraldeps-core may be code-signed. The team structure is as follows:
 
 - **Committers and reviewers:** [PardixLabs team](https://github.com/orgs/PardixLabs)
-- **Release approvers:** [@Conor-20105865](https://github.com/cnr) and core maintainers
+- **Release approvers:** [@Conor-20105865](https://github.com/Conor-20105865) and core maintainers
 
 Each release must be reviewed and manually approved before signing. Signed
 releases include a valid signature confirming that the binary is built from
