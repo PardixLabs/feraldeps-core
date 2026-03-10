@@ -1,3 +1,6 @@
+# ⭐ If you find this tool useful, consider starring the repo — it helps the project grow!
+
+
 # feraldeps-core
 
 Open‑source, local dependency and vulnerability scanner for Java projects.
