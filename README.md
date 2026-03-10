@@ -1,4 +1,4 @@
-# ⭐ If you find this tool useful, consider starring the repo — it helps the project grow!
+# ⭐ If you find this tool useful, consider starring the repo - it helps the project grow!
 
 
 # feraldeps-core
