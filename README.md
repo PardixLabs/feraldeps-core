@@ -3,13 +3,13 @@
 
 # feraldeps-core
 
-Open‑source, local dependency and vulnerability scanner for Java projects.
+Open‑source, local dependency and vulnerability scanner for Java and JavaScript projects.
 Maintained by [@Conor-20105865](https://github.com/Conor-20105865).
 
 The primary deliverable is a desktop GUI; most of the work (parsing your project
 files and generating reports) runs locally. However, to check for newer versions,
 vulnerabilities and CVSS severity scores the tool does make outbound HTTP
-requests to public APIs such as Maven Central, the OSV (vulnerability) service and
+requests to public APIs such as Maven Central, npm registry, the OSV (vulnerability) service and
 various CVSS providers (OSS Index, NVD, GitHub, etc.).
 
 ## Download
@@ -29,15 +29,17 @@ If you have a different version, update the filename accordingly (e.g., `feralde
 
 ## Features
 
-- Scans local Gradle/Maven/JavaScript projects for declared dependencies
+- Scans Java (Maven/Gradle) and JavaScript (npm) projects for declared dependencies
 - Detects outdated versions and known vulnerabilities
-- Generates an HTML/CSV report
-- Simple GUI with manual update checks
+- Cross-ecosystem CVSS severity scoring from multiple sources
+- Generates an HTML/CSV report with JavaScript dependency support
+- Simple GUI with manual update checks and API credential management
 
 ## Roadmap
 
 * Add transitive-dependency analysis (currently only first-level dependencies are scanned)
-* Support additional ecosystems such as Python and JavaScript (planned)
+* Extend npm support to include package-lock.json and yarn.lock for transitive dependencies
+* Support additional ecosystems such as Python
 * Improve offline/cached operation and CI integration
 
 ## Prerequisites
@@ -65,22 +67,23 @@ java -jar target/feraldeps-*.jar
    ```bash
    java -jar target/feraldeps-*.jar
    ```
-2. In the GUI, select a Gradle/Maven project folder and click **Scan**.
+2. In the GUI, select a project folder (Java with pom.xml/build.gradle or JavaScript with package.json) and click **Scan**.
 3. Review the generated report; export HTML if desired.
 
 ## Configuration
 
-The GUI includes a **Settings** tab where you can configure optional API credentials
+The GUI includes an **API Credentials** button where you can configure optional API credentials
 for enhanced CVSS severity scoring:
 
-- **OSS Index credentials** – required for access to Sonatype's OSS Index CVSS service.
-  Provide your username and token.
+- **OSS Index credentials** – optional, used for access to Sonatype's OSS Index CVSS service.
+  Provide your username and token for enhanced vulnerability data.
 - **GitHub token** – optional, used to query GitHub's vulnerability database for CVSS
   scores. Provide a personal access token with appropriate permissions.
 
-These credentials are stored locally and are **never transmitted** except when making
-authenticated requests to the respective services. Without these credentials, the tool
-will fall back to public APIs (NVD, etc.) for CVSS data.
+These credentials are stored locally on your device and are **never transmitted** except when making
+authenticated requests to the respective services. The credentials dialog includes convenient
+**Paste** buttons for easy credential entry. Without these credentials, the tool will fall back to
+public APIs (OSV, NVD, etc.) for CVSS data. This may cause blank data to be return within the report.
 
 ## Privacy Policy
 
@@ -88,9 +91,10 @@ This application scans your local project files to check for dependency updates
 and security vulnerabilities. During normal operation, the following external
 APIs are contacted:
 
-- **Maven Central** (`search.maven.org`) — to check for latest dependency versions
+- **Maven Central** (`search.maven.org`) — to check for latest Java dependency versions
+- **npm Registry** (`registry.npmjs.org`) — to check for latest JavaScript package versions
 - **OSV (Open Source Vulnerabilities)** (`api.osv.dev`) — to check for known
-  vulnerabilities in your dependencies
+  vulnerabilities in your dependencies (supports both ecosystem-aware queries)
 - **CVSS providers:**
   - **OSS Index** (`ossindex.sonatype.org`) — optional, requires credentials
   - **NVD (National Vulnerability Database)** (`services.nvd.nist.gov`) — to
