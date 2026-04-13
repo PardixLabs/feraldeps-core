@@ -2,8 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
-
 ### Added
 - JavaScript (npm) dependency scanning support with full ecosystem integration
 - Cross-ecosystem CVSS scoring with ecosystem-aware API queries
