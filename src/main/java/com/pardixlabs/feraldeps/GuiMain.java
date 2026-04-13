@@ -11,8 +11,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.OutputStream;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -23,11 +25,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -341,12 +347,12 @@ public class GuiMain extends JFrame {
 
         if (buildFiles.isEmpty()) {
             SwingUtilities.invokeLater(() -> {
-                addInfoLabel(allDepsPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
-                addInfoLabel(outdatedPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
-                addInfoLabel(upToDatePanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
-                addInfoLabel(vulnerablePanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
-                addInfoLabel(noInfoPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
-                addInfoLabel(ignoredPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts).");
+                addInfoLabel(allDepsPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
+                addInfoLabel(outdatedPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
+                addInfoLabel(upToDatePanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
+                addInfoLabel(vulnerablePanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
+                addInfoLabel(noInfoPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
+                addInfoLabel(ignoredPanel, "No build files found (pom.xml / build.gradle / build.gradle.kts / package.json).");
                 statusLabel.setText("No build files found");
                 rescanButton.setVisible(true);
                 rescanButton.setEnabled(true);
@@ -403,7 +409,7 @@ public class GuiMain extends JFrame {
 
     private boolean isBuildFile(File file) {
         String name = file.getName();
-        return name.equals("pom.xml") || name.equals("build.gradle") || name.equals("build.gradle.kts");
+        return name.equals("pom.xml") || name.equals("build.gradle") || name.equals("build.gradle.kts") || name.equals("package.json");
     }
 
     private int scanBuildFile(File buildFile) {
@@ -440,7 +446,7 @@ public class GuiMain extends JFrame {
                 if (ignoredDependencies.isIgnored(dep)) {
                     // Add to Ignored tab with checked checkbox
                     boolean isVulnerable = VulnerabilityDatabase.isVulnerable(dep);
-                    String latestVersion = VulnerabilityDatabase.latestVersion(dep.coordinate()).orElse(null);
+                    String latestVersion = VulnerabilityDatabase.latestVersion(dep).orElse(null);
                     Double cvssScore = null;
                     String cvssSource = null;
                     java.util.Optional<VulnerabilityDatabase.CvssResult> cvss = VulnerabilityDatabase.getCvssResult(dep);
@@ -458,7 +464,7 @@ public class GuiMain extends JFrame {
                 }
 
                 boolean isVulnerable = VulnerabilityDatabase.isVulnerable(dep);
-                String latestVersion = VulnerabilityDatabase.latestVersion(dep.coordinate()).orElse(null);
+                String latestVersion = VulnerabilityDatabase.latestVersion(dep).orElse(null);
                 boolean isOutdated = latestVersion != null && !latestVersion.equals(dep.version);
                 Double cvssScore = null;
                 String cvssSource = null;
@@ -549,6 +555,9 @@ public class GuiMain extends JFrame {
         }
         if (name.equals("build.gradle") || name.equals("build.gradle.kts")) {
             return GradleParser.parse(buildFile);
+        }
+        if (name.equals("package.json")) {
+            return NpmParser.parse(buildFile);
         }
         return new ArrayList<>();
     }
@@ -1099,6 +1108,42 @@ public class GuiMain extends JFrame {
         return new Font(UI_FONT_FAMILY, style, size);
     }
 
+    private void enablePaste(JTextField textField) {
+        // Ensure paste functionality works in dialogs
+        Action pasteAction = new DefaultEditorKit.PasteAction();
+        textField.getActionMap().put("paste", pasteAction);
+        textField.getInputMap(JComponent.WHEN_FOCUSED).put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()),
+            "paste"
+        );
+        textField.getInputMap(JComponent.WHEN_FOCUSED).put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.SHIFT_DOWN_MASK),
+            "paste"
+        );
+
+        // Ensure transfer handler is set for clipboard operations
+        textField.setTransferHandler(new javax.swing.TransferHandler("text"));
+    }
+
+    private void pasteIntoField(JTextField textField) {
+        try {
+            // Programmatically paste from clipboard
+            java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            java.awt.datatransfer.Transferable contents = clipboard.getContents(null);
+            if (contents != null && contents.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+                String pastedText = (String) contents.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+                textField.setText(pastedText);
+                textField.requestFocusInWindow();
+            }
+        } catch (Exception e) {
+            // If programmatic paste fails, try the action
+            Action pasteAction = textField.getActionMap().get("paste");
+            if (pasteAction != null) {
+                pasteAction.actionPerformed(new java.awt.event.ActionEvent(textField, 0, "paste"));
+            }
+        }
+    }
+
     private void markButton(JButton button, String role) {
         button.putClientProperty("role", role);
         button.setFocusPainted(false);
@@ -1263,7 +1308,7 @@ public class GuiMain extends JFrame {
     }
 
     private void openSettingsDialog() {
-        JDialog dialog = new JDialog(this, "Settings", true);
+        JDialog dialog = new JDialog(this, "Settings", true); // Keep it modal
         dialog.setLayout(new BorderLayout());
 
         Preferences prefs = Preferences.userNodeForPackage(GuiMain.class);
@@ -1273,25 +1318,52 @@ public class GuiMain extends JFrame {
         formPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JLabel ossUserLabel = new JLabel("OSS Index Username");
+        JPanel ossUserPanel = new JPanel(new BorderLayout());
         JTextField ossUserField = new JTextField(prefs.get("ossindex.user", ""));
         ossUserField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        ossUserField.setEditable(true);
+        ossUserField.setFocusable(true);
+        enablePaste(ossUserField);
+        JButton ossUserPasteButton = new JButton("Paste");
+        ossUserPasteButton.setPreferredSize(new Dimension(70, 28));
+        ossUserPasteButton.addActionListener(e -> pasteIntoField(ossUserField));
+        ossUserPanel.add(ossUserField, BorderLayout.CENTER);
+        ossUserPanel.add(ossUserPasteButton, BorderLayout.EAST);
 
         JLabel ossTokenLabel = new JLabel("OSS Index Token");
+        JPanel ossTokenPanel = new JPanel(new BorderLayout());
         JTextField ossTokenField = new JTextField(prefs.get("ossindex.token", ""));
         ossTokenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        ossTokenField.setEditable(true);
+        ossTokenField.setFocusable(true);
+        enablePaste(ossTokenField);
+        JButton ossTokenPasteButton = new JButton("Paste");
+        ossTokenPasteButton.setPreferredSize(new Dimension(70, 28));
+        ossTokenPasteButton.addActionListener(e -> pasteIntoField(ossTokenField));
+        ossTokenPanel.add(ossTokenField, BorderLayout.CENTER);
+        ossTokenPanel.add(ossTokenPasteButton, BorderLayout.EAST);
 
         JLabel githubTokenLabel = new JLabel("GitHub Token (for CVSS)");
+        JPanel githubTokenPanel = new JPanel(new BorderLayout());
         JTextField githubTokenField = new JTextField(prefs.get("github.token", ""));
         githubTokenField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        githubTokenField.setEditable(true);
+        githubTokenField.setFocusable(true);
+        enablePaste(githubTokenField);
+        JButton githubTokenPasteButton = new JButton("Paste");
+        githubTokenPasteButton.setPreferredSize(new Dimension(70, 28));
+        githubTokenPasteButton.addActionListener(e -> pasteIntoField(githubTokenField));
+        githubTokenPanel.add(githubTokenField, BorderLayout.CENTER);
+        githubTokenPanel.add(githubTokenPasteButton, BorderLayout.EAST);
 
         formPanel.add(ossUserLabel);
-        formPanel.add(ossUserField);
+        formPanel.add(ossUserPanel);
         formPanel.add(javax.swing.Box.createVerticalStrut(8));
         formPanel.add(ossTokenLabel);
-        formPanel.add(ossTokenField);
+        formPanel.add(ossTokenPanel);
         formPanel.add(javax.swing.Box.createVerticalStrut(8));
         formPanel.add(githubTokenLabel);
-        formPanel.add(githubTokenField);
+        formPanel.add(githubTokenPanel);
 
         JLabel note = new JLabel("These values are stored locally on this device.");
         note.setFont(new Font("SansSerif", Font.PLAIN, 11));
@@ -1317,10 +1389,23 @@ public class GuiMain extends JFrame {
 
         dialog.add(formPanel, BorderLayout.CENTER);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
-        dialog.setSize(520, 280);
+        dialog.setSize(650, 320); // Increased width further to accommodate wider paste buttons
         dialog.setLocationRelativeTo(this);
 
         applyThemeToDialog(dialog);
+
+        // Use a window listener to ensure focus is set after dialog is fully shown
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowOpened(java.awt.event.WindowEvent e) {
+                dialog.toFront();
+                dialog.requestFocus();
+                SwingUtilities.invokeLater(() -> {
+                    ossUserField.requestFocusInWindow();
+                    // Don't select all - let user paste directly
+                });
+            }
+        });
 
         dialog.setVisible(true);
     }

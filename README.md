@@ -29,7 +29,7 @@ If you have a different version, update the filename accordingly (e.g., `feralde
 
 ## Features
 
-- Scans local Gradle/Maven projects for declared dependencies
+- Scans local Gradle/Maven/JavaScript projects for declared dependencies
 - Detects outdated versions and known vulnerabilities
 - Generates an HTML/CSV report
 - Simple GUI with manual update checks

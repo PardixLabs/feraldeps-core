@@ -5,15 +5,32 @@ public class Dependency {
     public String artifactId;
     public String version;
     public String scope; // compile, test, provided, runtime, etc.
+    public String ecosystem; // Maven, npm, etc.
 
     public Dependency(String groupId, String artifactId, String version) {
+        this(groupId, artifactId, version, "compile", "Maven");
+    }
+
+    public Dependency(String artifactId, String version, String scope, String ecosystem) {
+        this.groupId = null;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.scope = scope;
+        this.ecosystem = ecosystem;
+    }
+
+    public Dependency(String groupId, String artifactId, String version, String scope, String ecosystem) {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
-        this.scope = "compile"; // default scope
+        this.scope = scope;
+        this.ecosystem = ecosystem;
     }
 
     public String coordinate() {
+        if (groupId == null || groupId.isEmpty()) {
+            return artifactId;
+        }
         return groupId + ":" + artifactId;
     }
 
@@ -25,12 +42,18 @@ public class Dependency {
         if (version == null) return false;
         
         // Version ranges use brackets/parentheses: [1.0,2.0), (,1.0], etc.
-        // Hard-locked versions are simple: 1.2.3, 1.2.3-SNAPSHOT, etc.
+        // Semver ranges can also use ^, ~, >, <, x, or *.
         return !version.contains("[") && 
                !version.contains("]") && 
                !version.contains("(") && 
                !version.contains(")") &&
-               !version.contains(",");
+               !version.contains(",") &&
+               !version.startsWith("^") &&
+               !version.startsWith("~") &&
+               !version.startsWith(">") &&
+               !version.startsWith("<") &&
+               !version.contains("*") &&
+               !version.toLowerCase().contains("x");
     }
 
     /**

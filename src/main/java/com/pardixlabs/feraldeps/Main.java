@@ -42,6 +42,8 @@ public class Main {
         System.out.println("Scanning build file: " + buildFile.getName());
         if (buildFile.getName().equals("pom.xml")) {
             System.out.println("Maven parent POM properties are resolved for direct dependencies.\n");
+        } else if (buildFile.getName().equals("package.json")) {
+            System.out.println("JavaScript dependencies are resolved from package.json direct sections.\n");
         }
 
         for (Dependency dep : deps) {
@@ -49,7 +51,7 @@ public class Main {
             System.out.println("  Scope: " + dep.scope);
             System.out.println("  Version Constraint: " + dep.getVersionConstraintType());
 
-            String latest = VulnerabilityDatabase.latestVersion(dep.coordinate()).orElse(null);
+            String latest = VulnerabilityDatabase.latestVersion(dep).orElse(null);
             if (latest != null && !latest.equals(dep.version)) {
                 System.out.println("  Outdated → latest: " + latest);
                 System.out.println("  Severity (outdated): " + dep.getOutdatedSeverityScore(latest) + "/10");
@@ -125,11 +127,14 @@ public class Main {
         if (name.equals("build.gradle") || name.equals("build.gradle.kts")) {
             return GradleParser.parse(buildFile);
         }
+        if (name.equals("package.json")) {
+            return NpmParser.parse(buildFile);
+        }
         throw new IllegalArgumentException("Unsupported build file: " + buildFile.getName());
     }
 
     private static void printUsageAndExit() {
-        System.out.println("Usage: java -jar feraldeps.jar <path/to/pom.xml> [--html <output.html>] [--cvss-debug]");
+        System.out.println("Usage: java -jar feraldeps.jar <path/to/pom.xml|build.gradle|build.gradle.kts|package.json> [--html <output.html>] [--cvss-debug]");
         System.exit(1);
     }
 }

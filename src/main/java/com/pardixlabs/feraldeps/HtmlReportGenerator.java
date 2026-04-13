@@ -118,7 +118,7 @@ public class HtmlReportGenerator {
         html.append("<details style='margin-top:12px;'>");
         html.append("<summary><strong>Info: Build File Scanning</strong></summary>");
         html.append("<ul>");
-        html.append("<li>Scans direct dependencies from pom.xml, build.gradle, and build.gradle.kts</li>");
+        html.append("<li>Scans direct dependencies from pom.xml, build.gradle, build.gradle.kts, and package.json</li>");
         html.append("<li>Maven parent POM properties are resolved for direct dependencies</li>");
         html.append("</ul>");
         html.append("</details>");
