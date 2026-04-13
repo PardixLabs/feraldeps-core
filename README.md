@@ -16,15 +16,15 @@ various CVSS providers (OSS Index, NVD, GitHub, etc.).
 
 Download the latest prebuilt jar (no build required):
 
-- [feraldeps-0.1.1.jar](https://github.com/PardixLabs/feraldeps-core/releases/download/v0.1.1/feraldeps-0.1.1.jar)
+- [feraldeps-0.1.2.jar](https://github.com/PardixLabs/feraldeps-core/releases/download/v0.1.2/feraldeps-0.1.2.jar)
 
 Run by either double-clicking the jar (on supported OSes) or via command line:
 
 ```bash
-java -jar /path/to/feraldeps-0.1.1.jar
+java -jar /path/to/feraldeps-0.1.2.jar
 ```
 
-If you have a different version, update the filename accordingly (e.g., `feraldeps-0.1.2.jar`).
+If you have a different version, update the filename accordingly (e.g., `feraldeps-0.1.1.jar`).
 
 
 ## Features

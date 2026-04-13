@@ -7,11 +7,11 @@
 
     <groupId>com.pardixlabs</groupId>
     <artifactId>feraldeps</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
 
     <name>FeralDeps</name>
-    <description>Local dependency and vulnerability scanner for Java projects</description>
+    <description>Local dependency and vulnerability scanner for Java and JavaScript projects</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
