@@ -1,9 +1,11 @@
-# ⭐ If you find this tool useful, consider starring the repo - it helps the project grow!
-
-
 # feraldeps-core
 
-Open‑source, local dependency and vulnerability scanner for Java and JavaScript projects.
+Local-first dependency and vulnerability scanner for Java and JavaScript projects, focused on actionable insights and multi-source CVSS scoring.
+
+Open-source desktop tool for scanning Java (Maven/Gradle) and JavaScript (npm) projects for outdated dependencies and known vulnerabilities.
+
+Designed to give developers fast, local-first insight into dependency health without relying entirely on cloud-based analysis.
+
 Maintained by [@Conor-20105865](https://github.com/Conor-20105865).
 
 The primary deliverable is a desktop GUI; most of the work (parsing your project
@@ -83,7 +85,7 @@ for enhanced CVSS severity scoring:
 These credentials are stored locally on your device and are **never transmitted** except when making
 authenticated requests to the respective services. The credentials dialog includes convenient
 **Paste** buttons for easy credential entry. Without these credentials, the tool will fall back to
-public APIs (OSV, NVD, etc.) for CVSS data. This may cause blank data to be return within the report.
+public APIs (OSV, NVD, etc.) for CVSS data. This may cause blank data to be returned within the report.
 
 ## Privacy Policy
 
