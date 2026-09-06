@@ -14,6 +14,11 @@ vulnerabilities and CVSS severity scores the tool does make outbound HTTP
 requests to public APIs such as Maven Central, npm registry, the OSV (vulnerability) service and
 various CVSS providers (OSS Index, NVD, GitHub, etc.).
 
+## Current Works
+
+Currently underway with large overhaul of code and bug fixes
+
+
 ## Download
 
 Download the latest prebuilt jar (no build required):
